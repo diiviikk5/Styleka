@@ -1,3 +1,6 @@
+import { app } from "./firebase-Config";
+console.log("Firebase Initialized:", app);
+
 const bar = document.getElementById('bar');
 const close = document.getElementById('close');
 const nav = document.getElementById('navbar');
