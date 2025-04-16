@@ -1,108 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STYLÉKA</title>
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" /> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <title>My Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    #cart-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px auto;
+      max-width: 800px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    #cart-list li {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #cart-list li:last-child {
+      border-bottom: none;
+    }
+
+    .product-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      margin-right: 15px;
+      object-fit: cover;
+    }
+
+    .product-details {
+      flex: 1;
+    }
+
+    .product-title {
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .product-size {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: #444;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quantity-controls button {
+      padding: 5px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .quantity-controls button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .quantity-controls input {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #total {
+      text-align: center;
+      font-size: 20px;
+      color: #444;
+      margin: 20px 0;
+    }
+
+    #payBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #payBtn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #payBtn:hover:not(:disabled) {
+      background-color: #218838;
+    }
+
+    .empty-cart {
+      text-align: center;
+      color: #888;
+      font-size: 18px;
+      margin-top: 50px;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
-
 <body>
+  <h1>My Cart</h1>
+  <ul id="cart-list"></ul>
+  <h3 id="total">Total: ₹0</h3>
+  <button id="payBtn" disabled>Pay Now</button>
 
-    <section id="header">
-        <!-- <a href="#"><img src="img/Untitled_design__1_-removebg-preview.png" class="logo" alt=""></a> -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCidoh3aUKsFzamLCetZkNlvbw-q_icLTY",
+      authDomain: "aniket-f99f3.firebaseapp.com",
+      projectId: "aniket-f99f3",
+      storageBucket: "aniket-f99f3.appspot.com",
+      messagingSenderId: "640193454368",
+      appId: "1:640193454368:web:336be90f18f5278a16f745",
+      databaseURL: "https://aniket-f99f3-default-rtdb.firebaseio.com"
+    };
 
-        <!-- <h1>STYLÉKA</h1> -->
+    firebase.initializeApp(firebaseConfig);
 
-        <span class="site-title">STYLÉKA</span>
+    const cartList = document.getElementById('cart-list');
+    const totalDisplay = document.getElementById('total');
+    const payBtn = document.getElementById('payBtn');
+    let totalAmount = 0;
 
-        <div>
-            <ul id="navbar">
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const userId = user.uid;
+        const cartRef = firebase.database().ref('cart/' + userId);
 
-                <li><a  href="Index.html">Home</a></li>
-                <li><a  href="shop.html">Shop</a></li>
-                <li><a  href="blog.html">Blog</a></li>
-                <li><a  href="about.html">About</a></li>
-                <li><a  href="contact.html">Contact</a></li>
-                <li id="lg-bag"><a class="active" href="cart.html"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
-                <a href="#" id="close"><i class="fa-solid fa-xmark"></i></a>
-            </ul>
-        </div>
+        cartRef.on('value', snapshot => {
+          cartList.innerHTML = '';
+          totalAmount = 0;
 
-        <div id="mobile">
-            <a href="cart.html"><i class="fa-solid fa-bag-shopping"></i></a> 
-            <i id="bar" class="fas fa-outdent"></i>
-        </div>
-    </section>
+          if (!snapshot.exists()) {
+            cartList.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
+            totalDisplay.textContent = 'Total: ₹0';
+            payBtn.disabled = true;
+            return;
+          }
 
-    <section id="page-header" class="about-header">
-        
-        <h2>#Cart</h2>
-        
-        <p>Add your coupon code & save upto 70%</p>
-        
-    </section>
+          snapshot.forEach(child => {
+            const item = child.val();
+            const price = parseInt(item.price.replace('₹', '').replace(',', '')) || 0;
+            const quantity = parseInt(item.quantity) || 1;
+            totalAmount += price * quantity;
 
-    <section id="cart" class="section-p1"></section>
+            const li = document.createElement('li');
 
-    <footer class="section-p1">
-        <div class="col">
-            <img src="img/WhatsApp_Image_2025-02-25_at_5.08.58_PM-removebg-preview.png" alt="" width="200px">
-            <h4>Contact</h4>
-            <p><strong>Address :</strong> Guru Nanak Dev University , Amritsar</p>
-            <p><strong>Phone :</strong> (+91) - 8507566667</p>
-            <p><strong>Hours :</strong> 10:00 - 18:00 , Mon - Sat</p>
-            <div class="follow">
-                <h4>Follow Us</h4>
-                <div class="icon">
-                    <i class="fa-brands fa-facebook"></i>
-                    <i class="fa-brands fa-twitter"></i>
-                    <i class="fa-brands fa-instagram"></i>
-                    <i class="fa-brands fa-pinterest-p"></i>
-                    <i class="fa-brands fa-youtube"></i>
+            li.innerHTML = `
+              <img src="${item.image}" alt="${item.title}" class="product-image">
+              <div class="product-details">
+                <div class="product-title">${item.title}</div>
+                <div class="product-size">Size: ${item.size}</div>
+                <div class="product-price">₹${price * quantity}</div>
+                <div class="quantity-controls">
+                  <button onclick="updateQuantity('${child.key}', ${quantity - 1})">-</button>
+                  <input type="number" value="${quantity}" min="1" readonly>
+                  <button onclick="updateQuantity('${child.key}', ${quantity + 1})">+</button>
                 </div>
-            </div>
-        </div>
+              </div>
+            `;
 
-        <div class="col">
-            <h4>About</h4>
-            <a href="#">About us</a>
-            <a href="#">Delivery Information</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms & Conditions</a>
-            <a href="#">Contact us</a>
-        </div>
+            cartList.appendChild(li);
+          });
 
-        <div class="col">
-            <h4>My Account</h4>
-            <a href="#">Sign In</a>
-            <a href="#">View Cart</a>
-            <a href="#">My Wishlist</a>
-            <a href="#">Track My Orders</a>
-            <a href="#">Help</a>
-        </div>
+          totalDisplay.textContent = `Total: ₹${totalAmount}`;
+          payBtn.disabled = false;
+        });
+      } else {
+        alert("User not logged in. Please log in.");
+      }
+    });
 
-        <div class="col install">
-            <h4>Install App</h4>
-            <p>From App Store or Google Play</p>
-            <div class="row">
-                <img src="img/Pay/app.jpg" alt="">
-                <img src="img/Pay/play.jpg" alt="">
-            </div>
-            <p>Secure Payment Gateways</p>
-            <img src="img/Pay/pay.png" alt="">
-        </div>
+    function updateQuantity(itemKey, newQuantity) {
+      if (newQuantity < 1) return;
 
-        <div class="copyright">
-            <p>© 2025 , Powered By STYLÉKA</p>
-        </div>
-    </footer>
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const userId = user.uid;
+        const itemRef = firebase.database().ref(`cart/${userId}/${itemKey}`);
+        itemRef.update({ quantity: newQuantity });
+      }
+    }
 
-    <script src="script.js"></script>
+    payBtn.addEventListener('click', async () => {
+      try {
+        const user = firebase.auth().currentUser;
+        if (!user) return alert("Please log in first.");
+
+        const cartRef = firebase.database().ref('cart/' + user.uid);
+        const snapshot = await cartRef.once('value');
+
+        const items = [];
+
+        snapshot.forEach(child => {
+          const item = child.val();
+          const price = parseInt(item.price.replace('₹', '').replace(',', '')) || 0;
+          const quantity = parseInt(item.quantity) || 1;
+
+          items.push({
+            title: item.title,
+            price: price,
+            quantity: quantity
+          });
+        });
+
+        console.log("Sending items to backend:", items);
+
+        const response = await fetch('http://localhost:4242/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Error response from server:", data);
+          alert("Something went wrong: " + data.error);
+        }
+
+        if (data.id) {
+          const stripe = Stripe("pk_test_51REOhFECJtYsBmLByllvEwttdOUt4mUF8PDMEivSWcEyS4yji8WecBezyZGBLc1mXywdqjE48Y1bwGpb3FXIW7FK00mG2XzHXK");
+          stripe.redirectToCheckout({ sessionId: data.id });
+        } else {
+          alert("No session id returned from server.");
+        }
+      } catch (err) {
+        console.error("Error during payment:", err);
+        alert("Payment failed: " + err.message);
+      }
+    });
+  </script>
 </body>
-
 </html>
