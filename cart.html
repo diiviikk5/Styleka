@@ -127,6 +127,51 @@
       font-size: 18px;
       margin-top: 50px;
     }
+
+    #coupon-section {
+      max-width: 800px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #coupon-section input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    #coupon-section button {
+      padding: 10px 20px;
+      background-color: #088178;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #coupon-section button:hover {
+      background-color: #066d5f;
+    }
+
+    .coupon-message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #088178;
+    }
+
+    .coupon-message.error {
+      color: #d9534f;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -137,6 +182,13 @@
   <h1>My Cart</h1>
   <ul id="cart-list"></ul>
   <h3 id="total">Total: ₹0</h3>
+
+  <div id="coupon-section">
+    <input type="text" id="coupon-code" placeholder="Enter coupon code">
+    <button onclick="applyCoupon()">Apply Coupon</button>
+  </div>
+  <p id="coupon-message" class="coupon-message"></p>
+
   <button id="payBtn" disabled>Pay Now</button>
 
   <script>
@@ -155,7 +207,9 @@
     const cartList = document.getElementById('cart-list');
     const totalDisplay = document.getElementById('total');
     const payBtn = document.getElementById('payBtn');
+    const couponMessage = document.getElementById('coupon-message');
     let totalAmount = 0;
+    let discount = 0;
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -198,7 +252,7 @@
             cartList.appendChild(li);
           });
 
-          totalDisplay.textContent = `Total: ₹${totalAmount}`;
+          updateTotal();
           payBtn.disabled = false;
         });
       } else {
@@ -217,6 +271,31 @@
       }
     }
 
+    function applyCoupon() {
+      const couponCode = document.getElementById('coupon-code').value.trim();
+      couponMessage.textContent = '';
+      couponMessage.classList.remove('error');
+
+      if (couponCode === 'DISCOUNT10') {
+        discount = 0.1; // 10% discount
+        couponMessage.textContent = 'Coupon applied! You get 10% off.';
+      } else if (couponCode === 'Aniket18') {
+        discount = 0.3; // 30% discount
+        couponMessage.textContent = 'Coupon applied! You get 30% off.';
+      } else {
+        discount = 0;
+        couponMessage.textContent = 'Invalid coupon code.';
+        couponMessage.classList.add('error');
+      }
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const discountedTotal = totalAmount - totalAmount * discount;
+      totalDisplay.textContent = `Total: ₹${discountedTotal.toFixed(2)}`;
+    }
+
     payBtn.addEventListener('click', async () => {
       try {
         const user = firebase.auth().currentUser;
@@ -226,25 +305,25 @@
         const snapshot = await cartRef.once('value');
 
         const items = [];
-
         snapshot.forEach(child => {
           const item = child.val();
           const price = parseInt(item.price.replace('₹', '').replace(',', '')) || 0;
           const quantity = parseInt(item.quantity) || 1;
 
+          // Apply discount to each item's price
+          const discountedPrice = price - price * discount;
+
           items.push({
             title: item.title,
-            price: price,
+            price: discountedPrice.toFixed(2), // Send discounted price
             quantity: quantity
           });
         });
 
-        console.log("Sending items to backend:", items);
-
         const response = await fetch('http://localhost:4242/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items })
+          body: JSON.stringify({ items }) // Send discounted items
         });
 
         const data = await response.json();
@@ -256,7 +335,16 @@
 
         if (data.id) {
           const stripe = Stripe("pk_test_51REOhFECJtYsBmLByllvEwttdOUt4mUF8PDMEivSWcEyS4yji8WecBezyZGBLc1mXywdqjE48Y1bwGpb3FXIW7FK00mG2XzHXK");
-          stripe.redirectToCheckout({ sessionId: data.id });
+          stripe.redirectToCheckout({
+            sessionId: data.id
+          }).then(result => {
+            if (result.error) {
+              alert("Payment failed: " + result.error.message);
+            } else {
+              emptyCart(user.uid); // Empty the cart after successful payment
+              window.location.href = "success.html"; // Redirect to success page
+            }
+          });
         } else {
           alert("No session id returned from server.");
         }
@@ -265,6 +353,11 @@
         alert("Payment failed: " + err.message);
       }
     });
+
+    function emptyCart(userId) {
+      const cartRef = firebase.database().ref('cart/' + userId);
+      cartRef.remove();
+    }
   </script>
 </body>
 </html>
