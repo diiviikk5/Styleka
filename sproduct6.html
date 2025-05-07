@@ -73,6 +73,49 @@
       margin-top: 15px;
       font-weight: bold;
     }
+
+    .recommendations {
+      margin-top: 40px;
+    }
+
+    .recommendations-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .recommendation {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      width: 200px;
+      margin: 10px;
+    }
+
+    .recommendation img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .recommendation h4 {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .recommendation p {
+      font-size: 16px;
+      color: #555;
+    }
+
+    .recommendation button {
+      padding: 10px 20px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -96,6 +139,36 @@
   <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
 
   <div class="message" id="message"></div>
+</div>
+
+<div class="recommendations">
+  <h2>You May Also Like</h2>
+  <div class="recommendations-container">
+    <div class="recommendation">
+      <img src="img/Products/f1.jpg" alt="Product 1">
+      <h4>Men's Fashion T-Shirts</h4>
+      <p>₹5000</p>
+      <button onclick="window.location.href='sproduct.html'">View Product</button>
+    </div>
+    <div class="recommendation">
+      <img src="img/Products/f2.jpg" alt="Product 2">
+      <h4>Flower Print Shirt</h4>
+      <p>₹14999</p>
+      <button onclick="window.location.href='sproduct2.html'">View Product</button>
+    </div>
+    <div class="recommendation">
+      <img src="img/Products/f6.jpg" alt="Product 3">
+      <h4>Dual Color Shirt</h4>
+      <p>₹4000</p>
+      <button onclick="window.location.href='sproduct4.html'">View Product</button>
+    </div>
+    <div class="recommendation">
+      <img src="img/Products/f7.jpg" alt="Product 4">
+      <h4>Printed Women Trouser</h4>
+      <p>₹1599</p>
+      <button onclick="window.location.href='sproduct5.html'">View Product</button>
+    </div>
+  </div>
 </div>
 
 <!-- Firebase SDK -->
