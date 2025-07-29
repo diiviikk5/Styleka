@@ -16,3 +16,16 @@ if(close){
         nav.classList.remove('active');
     })
 }
+function filterProducts() {
+        const input = document.getElementById("searchBar").value.toLowerCase();
+        const products = document.querySelectorAll(".pro");
+
+        products.forEach(product => {
+            const name = product.getAttribute("data-name");
+            if (name.toLowerCase().includes(input)) {
+                product.style.display = "block";
+            } else {
+                product.style.display = "none";
+            }
+        });
+    }
