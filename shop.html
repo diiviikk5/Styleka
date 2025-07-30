@@ -451,16 +451,79 @@
             box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
         }
 
-        /* Enhanced Footer */
+                        /* Enhanced Footer - Dark Theme */
         footer {
+            background: #E6E6FA; /* Changed to lilac color */
+            color: white;
+            padding: 40px 80px;
+            border-radius: 20px;
+            margin: 40px 20px 20px 20px;
+            position: relative;
+            border: none;
+            box-shadow: 0 0 30px rgba(230, 230, 250, 0.6),
+                        inset 0 0 30px rgba(230, 230, 250, 0.2);
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #007bff, #00d4ff, #007bff, #00d4ff);
+            border-radius: 23px;
+            z-index: -1;
+            animation: outerGlow 3s ease-in-out infinite alternate;
+        }
+
+        .footer-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 40px 80px;
-            border-radius: 20px 20px 0 0;
-            margin-top: 40px;
+            width: 100%;
+            background-color: white;
+            color: #0066cc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            position: relative;
+            border: none;
+            box-shadow: 0 0 35px rgba(230, 230, 250, 0.6), 
+                        inset 0 0 25px rgba(230, 230, 250, 0.2);
+        }
+
+        .footer-container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #007bff, #00d4ff, #007bff, #00d4ff);
+            border-radius: 13px;
+            z-index: -1;
+            animation: innerGlow 2.5s ease-in-out infinite alternate;
+        }
+
+
+
+        @keyframes outerGlow {
+            from {
+                box-shadow: 0 0 30px rgba(230, 230, 250, 0.6);
+            }
+            to {
+                box-shadow: 0 0 50px rgba(230, 230, 250, 0.9);
+            }
+        }
+
+        @keyframes innerGlow {
+            from {
+                box-shadow: 0 0 25px rgba(230, 230, 250, 0.6);
+            }
+            to {
+                box-shadow: 0 0 45px rgba(230, 230, 250, 0.9);
+            }
         }
 
         footer .col {
@@ -468,31 +531,40 @@
             flex-direction: column;
             align-items: flex-start;
             margin-bottom: 20px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* Add spacing between STYLÉKA and Navigation columns */
+        footer .col:first-child {
+            margin-right: 40px;
         }
 
         footer h4 {
-            font-size: 1.2rem;
-            padding-bottom: 20px;
-            color: #fff;
+            font-size: 1.3rem;
+            padding-bottom: 15px;
+            color: #007bff;
             font-weight: 600;
+            margin-bottom: 15px;
         }
 
         footer p {
             font-size: 14px;
             margin: 5px 0 8px 0;
-            color: rgba(255, 255, 255, 0.8);
+            color: #0066cc;
+            line-height: 1.6;
         }
 
         footer a {
             font-size: 14px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
+            color: #0066cc;
+            margin-bottom: 8px;
             transition: all 0.3s ease;
         }
 
         footer a:hover {
-            color: #667eea;
+            color: #007bff;
             transform: translateX(5px);
         }
 
@@ -501,7 +573,7 @@
         }
 
         .follow .icon {
-            color: #667eea;
+            color: #007bff;
             padding-right: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -510,7 +582,21 @@
 
         .follow .icon:hover {
             transform: scale(1.2);
-            color: #ff6b6b;
+            color: #00d4ff;
+        }
+
+        .icon a {
+            color: #0066cc;
+            padding-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        .icon a:hover {
+            transform: scale(1.2);
+            color: #00d4ff;
         }
 
         .install img {
@@ -528,8 +614,8 @@
             text-align: center;
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(0, 123, 255, 0.3);
+            color: #0066cc;
         }
 
         /* Loading animation for products */
@@ -1011,53 +1097,47 @@
     </section>
 
     <footer class="section-p1">
-        <div class="col">
-            <img src="img/WhatsApp_Image_2025-02-25_at_5.08.58_PM-removebg-preview.png" alt="" width="200px">
-            <h4>Contact</h4>
-            <p><strong>Address :</strong> Guru Nanak Dev University , Amritsar</p>
-            <p><strong>Phone :</strong> (+91) - 8507566667</p>
-            <p><strong>Hours :</strong> 10:00 - 18:00 , Mon - Sat</p>
-            <div class="follow">
-                <h4>Follow Us</h4>
+        <div class="footer-container">
+            <div class="col">
+                <h4>STYLÉKA</h4>
+                <p>Where fashion meets innovation and style transcends boundaries. STYLÉKA is your premier destination for curated fashion that speaks to the modern individual. From streetwear to haute couture, we blend contemporary trends with timeless elegance, offering a shopping experience that's as unique as your personal style. Discover collections that celebrate diversity, sustainability, and the art of self-expression.</p>
+            </div>
+
+            <div class="col">
+                <h4>Navigation</h4>
+                <a href="index.html">Home</a>
+                <a href="shop.html">Shop</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="blog.html">Blog</a>
+            </div>
+
+            <div class="col">
+                <h4>Contact</h4>
+                <p>Address: Guru Nanak Dev University, Amritsar</p>
+                <p>Phone: (+91)-8507566667</p>
+                <p>Hours: 10:00-18:00, Mon-Sat</p>
+                <h4>Follow us</h4>
                 <div class="icon">
-                    <i class="fa-brands fa-facebook"></i>
-                    <i class="fa-brands fa-twitter"></i>
-                    <i class="fa-brands fa-instagram"></i>
-                    <i class="fa-brands fa-pinterest-p"></i>
-                    <i class="fa-brands fa-youtube"></i>
+                    <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="col">
+                <h4>Install App</h4>
+                <div class="icon">
+                    <a href="https://play.google.com" target="_blank"><i class="fab fa-google-play"></i></a>
+                </div>
+                <h4>Secure Payment Gateways</h4>
+                <div class="icon">
+                    <a href="https://razorpay.com" target="_blank"><i class="fas fa-credit-card"></i></a>
                 </div>
             </div>
         </div>
-
-        <div class="col">
-            <h4>About</h4>
-            <a href="#">About us</a>
-            <a href="#">Delivery Information</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms & Conditions</a>
-            <a href="#">Contact us</a>
-        </div>
-
-        <div class="col">
-            <h4>My Account</h4>
-            <a href="#">Sign In</a>
-            <a href="#">View Cart</a>
-            <a href="#">My Wishlist</a>
-            <a href="#">Track My Orders</a>
-            <a href="#">Help</a>
-        </div>
-
-        <div class="col install">
-            <h4>Install App</h4>
-            <p>From App Store or Google Play</p>
-            <div class="row">
-                <img src="img/Pay/app.jpg" alt="">
-                <img src="img/Pay/play.jpg" alt="">
-            </div>
-            <p>Secure Payment Gateways</p>
-            <img src="img/Pay/pay.png" alt="">
-        </div>
-
+        
         <div class="copyright">
             <p>© 2025 , Powered By STYLÉKA</p>
         </div>
