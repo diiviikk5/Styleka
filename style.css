@@ -1,6 +1,88 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
 
+/* CSS Variables for Theme Colors */
+:root {
+    /* Light theme colors */
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --text-secondary: #606063;
+    --header-bg: #E3E6F3;
+    --card-bg: #ffffff;
+    --card-border: #cce7d0;
+    --shadow-light: rgba(0, 0, 0, 0.03);
+    --shadow-medium: rgba(0, 0, 0, 0.06);
+    --shadow-dark: rgba(0, 0, 0, 0.08);
+    --button-bg: #ffffff;
+    --button-text: #000;
+    --input-bg: #ffffff;
+    --input-border: #cce7d0;
+    --accent-color: #088178;
+    --accent-secondary: rebeccapurple;
+    --feature-bg-1: #fddde4;
+    --feature-bg-2: rgba(127, 246, 255, 0.519);
+    --feature-bg-3: rgb(255, 127, 127);
+    --feature-bg-4: rgb(171, 232, 86);
+    --feature-bg-5: rgba(195, 120, 44, 0.516);
+    --feature-bg-6: rgb(146, 127, 255);
+    --star-color: rgb(243, 181, 25);
+    --cart-bg: #e8f6ea;
+    --newsletter-text: #000;
+    --footer-text: #1a1a1a;
+    --footer-link: #606063;
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --header-bg: #1e1e1e;
+    --card-bg: #1e1e1e;
+    --card-border: #333333;
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-medium: rgba(255, 255, 255, 0.08);
+    --shadow-dark: rgba(255, 255, 255, 0.12);
+    --button-bg: #2a2a2a;
+    --button-text: #e0e0e0;
+    --input-bg: #2a2a2a;
+    --input-border: #444444;
+    --accent-color: #4db6ac;
+    --accent-secondary: #bb86fc;
+    --feature-bg-1: #3d2a3d;
+    --feature-bg-2: #2a3d3d;
+    --feature-bg-3: #3d2a2a;
+    --feature-bg-4: #2d3d2a;
+    --feature-bg-5: #3d3d2a;
+    --feature-bg-6: #2a2a3d;
+    --star-color: #ffc107;
+    --cart-bg: #2d4a3d;
+    --newsletter-text: #e0e0e0;
+    --footer-text: #e0e0e0;
+    --footer-link: #b0b0b0;
+}
+
+/* Ensure images don't interfere with dark mode */
+[data-theme="dark"] img {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+[data-theme="dark"] img:hover {
+    opacity: 1;
+}
+
+/* Additional dark mode enhancements */
+[data-theme="dark"] #Hero {
+    background-blend-mode: overlay;
+}
+
+[data-theme="dark"] #banner,
+[data-theme="dark"] #sm-banner .banner-box,
+[data-theme="dark"] #banner3 .banner-box {
+    background-blend-mode: overlay;
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -8,31 +90,37 @@
     font-family: "Play", serif;
 }
 
+/* Smooth transitions for theme switching */
+*, *::before, *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 h1 {
     font-size: 50px;
     line-height: 64px;
-    color: rgb(10, 10, 10);
+    color: var(--text-color);
 }
 
 h2 {
     font-size: 46px;
     line-height: 54px;
-    color: black;
+    color: var(--text-color);
 }
 
 h4 {
     font-size: 20px;
-    color: black;
+    color: var(--text-color);
 }
 
 h6 {
     font-weight: 700;
     font-size: 12px;
+    color: var(--text-color);
 }
 
 p{
     font-size: 16px;
-    color: rebeccapurple;
+    color: var(--accent-secondary);
     margin: 15px 0 20px 0;
 }
 
@@ -48,13 +136,13 @@ button.normal{
     font-size: 14px;
     font-weight: 600;
     padding: 15px 30px;
-    color: #000;
-    background-color: #fff;
+    color: var(--button-text);
+    background-color: var(--button-bg);
     border-radius: 4px;
     cursor: pointer;
-    border: none;
+    border: 1px solid var(--card-border);
     outline: none;
-    transition: 0.2sec;
+    transition: 0.2s;
 }
 
 button.white{
@@ -66,11 +154,13 @@ button.white{
     cursor: pointer;
     border: 1px solid #fff;
     outline: none;
-    transition: 0.2sec;
+    transition: 0.2s;
 }
 
 body{
     width: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 /*Header Start */ 
@@ -80,8 +170,8 @@ body{
     justify-content: space-between;
     /* font-style: italic; */
     padding: 20px 80px;
-    background: #E3E6F3;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    background: var(--header-bg);
+    box-shadow: 0 5px 15px var(--shadow-dark);
     z-index: 999;
     position: sticky;
     top: 0;
@@ -91,11 +181,41 @@ body{
 .site-title{
     font-size: 5em;
     font-weight: bold;
-    color: black;
+    color: var(--text-color);
 }
 
 .logo{
     height: 200px;
+}
+
+/* Theme Toggle Styles */
+#theme-toggle {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+#theme-toggle:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+#theme-toggle:hover i {
+    color: white !important;
+}
+
+#theme-toggle i {
+    font-size: 18px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 #navbar{
@@ -114,13 +234,13 @@ body{
     text-decoration: none;
     font-size: 16px;
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--text-color);
     transition: 0.3s ease;
 }
 
 #navbar li a:hover ,
 #navbar li a.active{
-    color: #088178;
+    color: var(--accent-color);
 }
 
 #navbar li a.active::after,
@@ -128,7 +248,7 @@ body{
     content: "";
     width: 30%;
     height: 2px;
-    background: #088178;
+    background: var(--accent-color);
     position: absolute;
     bottom: -4px;
     left: 20px;
@@ -165,26 +285,29 @@ body{
 #Hero h1{
     font-size: 70px;
     font-weight: bold;
-    color: #088178;
+    color: var(--accent-color);
 }
 
 #Hero h2{
     font-size: 60px;
+    color: var(--text-color);
 }
 
 #Hero h4{
     font-size: 20px;
     padding-bottom:15px ;
+    color: var(--text-color);
 }
 
 #Hero p{
     font-size: 18px;
+    color: var(--text-secondary);
 }
 
 #Hero button{
     background-image: url(img/button.png);
     background-color: transparent;
-    color: #088178;
+    color: var(--accent-color);
     border: 0;
     padding: 14px 80px 14px 65px;
     background-repeat: no-repeat;
@@ -204,14 +327,15 @@ body{
     width: 180px;
     text-align: center;
     padding: 25px 15px;
-    box-shadow: 20px 20px 34px rgb(0, 0, 0 , 0.03);
-    border: 1px solid #cce7d0;
+    box-shadow: 20px 20px 34px var(--shadow-light);
+    border: 1px solid var(--card-border);
     border-radius: 4px;
     margin: 15px 0;
+    background-color: var(--card-bg);
 }
 
 #feature .fe-box:hover{
-    box-shadow: 10px 10px 54px rgba(70, 62, 221 , 0.1);
+    box-shadow: 10px 10px 54px var(--shadow-medium);
 }
 
 #feature .fe-box img{
@@ -224,32 +348,37 @@ body{
     padding: 9px 8px 6px 8px;
     line-height: 1;
     border-radius: 4px;
-    color: #088178;
-    background-color: #fddde4;
+    color: var(--accent-color);
+    background-color: var(--feature-bg-1);
 }
 
 #feature .fe-box:nth-child(2) h6{
-    background-color: rgba(127, 246, 255, 0.519);
+    background-color: var(--feature-bg-2);
 }
 
 #feature .fe-box:nth-child(3) h6{
-    background-color: rgb(255, 127, 127);
+    background-color: var(--feature-bg-3);
 }
 
 #feature .fe-box:nth-child(4) h6{
-    background-color: rgb(171, 232, 86);
+    background-color: var(--feature-bg-4);
 }
 
 #feature .fe-box:nth-child(5) h6{
-    background-color: rgba(195, 120, 44, 0.516);
+    background-color: var(--feature-bg-5);
 }
 
-#feature .fe-box:nth-child(2) h6{
-    background-color: rgb(146, 127, 255);
+#feature .fe-box:nth-child(6) h6{
+    background-color: var(--feature-bg-6);
 }
 
 #product1{
     text-align: center;
+    background-color: var(--bg-color);
+}
+
+#product1 h2, #product1 p {
+    color: var(--text-color);
 }
 
 #product1 .pro-container{
@@ -263,17 +392,18 @@ body{
     width: 23%;
     min-width: 250px;
     padding: 10px 12px;
-    border : 1px solid #cce7d0;
+    border : 1px solid var(--card-border);
     border-radius: 25px;
     cursor: pointer;
-    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+    box-shadow: 20px 20px 30px var(--shadow-light);
     margin: 15px 0;
-    transition: 0.2sec ease;
+    transition: 0.2s ease;
     position: relative;
+    background-color: var(--card-bg);
 }
 
 #product1 .pro:hover{
-    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.06);
+    box-shadow: 20px 20px 30px var(--shadow-medium);
 }
 
 #product1 .pro img{
@@ -287,26 +417,26 @@ body{
 }
 
 #product1 .pro .des span{
-    color: #606063;
+    color: var(--text-secondary);
     font-size: 12px;
 }
 
 #product1 .pro .des h5{
     padding-top: 7px;
-    color: #1a1a1a;
+    color: var(--text-color);
     font-size: 14px;
 }
 
 #product1 .pro .des i{
     font-size: 12px;
-    color: rgb(243, 181, 25);
+    color: var(--star-color);
 }
 
 #product1 .pro .des h4{
     padding-top: 7px;
     font-size: 15px;
     font-weight: 700;
-    color: #088178;
+    color: var(--accent-color);
 }
 
 #product1 .pro .cart{
@@ -314,10 +444,10 @@ body{
     height: 40px;
     line-height: 40px;
     border-radius: 50px;
-    background-color: #e8f6ea;
+    background-color: var(--cart-bg);
     font-weight: 500;
-    color: #088178;
-    border: 1px solid #cce7d0;
+    color: var(--accent-color);
+    border: 1px solid var(--card-border);
     position: absolute;
     right: 10px;
     bottom: 10px;
@@ -357,7 +487,7 @@ body{
 }
 
 #banner button:hover{
-    background: #088178;
+    background: var(--accent-color);
     color: #fff;
 }
 
@@ -404,8 +534,8 @@ body{
 }
 
 #sm-banner .banner-box:hover button{
-    background: #088178;
-    border: 1px #088178;
+    background: var(--accent-color);
+    border: 1px var(--accent-color);
 }
 
 #banner3{
@@ -491,10 +621,13 @@ body{
     outline: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--input-border);
 }
 
 #newsletter button{
-    background-color: #088178;
+    background-color: var(--accent-color);
     color: #fff;
     white-space: nowrap;
     border-top-left-radius: 0;
@@ -505,6 +638,8 @@ footer{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--card-border);
 }
 
 footer .col{
@@ -517,17 +652,19 @@ footer .col{
 footer h4{
     font-size: 14px;
     padding-bottom: 20px;
+    color: var(--footer-text);
 }
 
 footer p{
     font-size: 13px;
     margin: 0 0 8px 0;
+    color: var(--footer-text);
 }
 
 footer a{
     font-size: 13px;
     text-decoration: none;
-    color: #222;
+    color: var(--footer-link);
     margin-bottom: 10px;
 }
 
@@ -536,13 +673,13 @@ footer .follow{
 }
 
 footer .follow i{
-    color: #465b52;
+    color: var(--footer-link);
     padding-right: 4px;
     cursor: pointer;
 }
 
 footer .install .row img{
-    border: 1px solid #088178;
+    border: 1px solid var(--accent-color);
     border-radius: 6px;
 }
 
@@ -552,12 +689,16 @@ footer .install img{
 
 footer .follow i:hover ,
 footer a:hover{
-    color:#088178;
+    color: var(--accent-color);
 }
 
 footer .copyright{
     width: 100%;
     text-align: center;
+}
+
+footer .copyright p{
+    color: var(--footer-text);
 }
 
 /* Shop Page */
@@ -886,8 +1027,8 @@ footer .copyright{
         right: -300px;
         height: 100vh;
         width: 300px;
-        background-color: #E3E6F3;
-        box-shadow: 0 40px 60px rgba(0 , 0 , 0 , 0.1);
+        background-color: var(--header-bg);
+        box-shadow: 0 40px 60px var(--shadow-medium);
         padding: 80px 0 0 10px;
         transition: 0.3s ;
     }
@@ -906,7 +1047,7 @@ footer .copyright{
     }
 
     #mobile i{
-        color: #1a1a1a;
+        color: var(--text-color);
         font-size: 24px;
         padding-left: 20px;
     }
@@ -916,12 +1057,18 @@ footer .copyright{
         position: absolute;
         top: 30px;
         left: 30px;
-        color: #222;
+        color: var(--text-color);
         font-size: 24px;
     }
 
     #lg-bag{
         display: none;
+    }
+
+    #theme-toggle {
+        order: -1; /* Move theme toggle to beginning of navbar in mobile */
+        margin-bottom: 20px;
+        align-self: center;
     }
 
     #Hero {
