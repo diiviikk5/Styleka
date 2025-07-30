@@ -1620,3 +1620,28 @@ footer .copyright{
         margin-right: 50px;
     } */
 }
+
+.search-container {
+    position: relative;
+    width: 50%;
+    margin: 30px auto;
+}
+
+.search-box {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 18px;
+    pointer-events: none;
+}
