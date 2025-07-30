@@ -172,6 +172,23 @@
     .coupon-message.error {
       color: #d9534f;
     }
+    .login-prompt {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .login-btn {
+      padding: 10px 20px;
+      background: #088178;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .login-btn:hover {
+      background: #222;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -256,9 +273,28 @@
           payBtn.disabled = false;
         });
       } else {
-        alert("User not logged in. Please log in.");
-      }
-    });
+            // Hides cart and coupon sections
+            document.getElementById('cart-list').style.display = 'none';
+            document.getElementById('total').style.display = 'none';
+            document.getElementById('coupon-section').style.display = 'none';
+            document.getElementById('payBtn').style.display = 'none';
+            document.getElementById('coupon-message').style.display = 'none';
+
+            // Provides login prompt
+            const body = document.body;
+            const loginDiv = document.createElement('div');
+            loginDiv.className = 'login-prompt';
+            loginDiv.innerHTML = `
+              <p>User is not logged in.</p>
+              <button class="login-btn" onclick="window.location.href='login.html'">
+                Login to access your cart
+              </button>
+            `;
+            body.appendChild(loginDiv);
+           }
+        });
+        
+ 
 
     function updateQuantity(itemKey, newQuantity) {
       if (newQuantity < 1) return;
